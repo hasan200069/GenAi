@@ -1,0 +1,26 @@
+# Use an official PyTorch image as the base image
+FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Install necessary system dependencies
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-dev \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy your application code into the container
+COPY . /app
+
+# Expose the port the app will run on
+EXPOSE 5000
+
+# Run the Flask app
+CMD ["python3", "GIN.py"]
